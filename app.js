@@ -117,6 +117,7 @@ app.get("/orderList/:tableNo", async (req, res) => {
     res.status(200).send(orders);
   } catch (err) {
     console.error("Something went wrong while fetching order data", err);
+    console.log("code is working")
     res.status(500).send("Something went wrong while fetching order data");
   }
 });
