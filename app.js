@@ -6,6 +6,8 @@ const nodeMailer = require("nodemailer");
 require("dotenv").config();
 const app = express();
 const cors = require("cors");
+const path = require('path');
+
 const favicon = require("serve-favicon");
 app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
 app.use(express.static(path.join(__dirname, "public")));
