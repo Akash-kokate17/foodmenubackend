@@ -6,6 +6,9 @@ const nodeMailer = require("nodemailer");
 require("dotenv").config();
 const app = express();
 const cors = require("cors");
+const favicon = require("serve-favicon");
+app.use(favicon(path.join(__dirname, "public", "favicon.ico")));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 app.use(express.json());
@@ -117,7 +120,7 @@ app.get("/orderList/:tableNo", async (req, res) => {
     res.status(200).send(orders);
   } catch (err) {
     console.error("Something went wrong while fetching order data", err);
-    console.log("code is working")
+    console.log("code is working");
     res.status(500).send("Something went wrong while fetching order data");
   }
 });
@@ -126,7 +129,7 @@ app.get("/orderList/:tableNo", async (req, res) => {
 
 app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
-    const { tableNo,userEmail  } = req.params;
+    const { tableNo, userEmail } = req.params;
     const order = await Order.findOne({ tableNo: tableNo });
     if (!order) {
       res.status(400).send("order is not found, order not placed");
@@ -146,7 +149,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
 
     const mailInfo = {
       from: "akashkokate1717@gmail.com",
-      to: ["akashkokate1717@gmail.com",userEmail],
+      to: ["akashkokate1717@gmail.com", userEmail],
       subject: "Your Oder List",
       html: `
       <h1 style="text-center">this is your oder menu</h1>
