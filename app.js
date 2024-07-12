@@ -6,11 +6,13 @@ const nodeMailer = require("nodemailer");
 require("dotenv").config();
 const app = express();
 const cors = require("cors");
+const router = require("./postRotiBevarage/RotiBevarage");
 
 
 app.use(cors());
 app.use(express.json());
 app.use("/api", authController);
+app.use("/rotiBevarage",router)
 
 // /veg for fetching all the veg data in mongodb
 app.get("/veg", async (req, res) => {

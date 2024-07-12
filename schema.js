@@ -21,6 +21,8 @@ const orderSchema = new mongoose.Schema({
   no: Number,
   items: [{ dishName: String, price: Number }], // Adjusted schema for items
   tableNo: Number,
+  tanduriRoti:[],
+  waterBottle:[],
 });
 
 const Order = mongoose.model("oders", orderSchema);
