@@ -2,12 +2,11 @@ const express = require("express");
 const { connectDatabase } = require("./databaseConnection");
 const { Veg, NonVeg, Order, placeOrders, AllDayOrder } = require("./schema");
 const authController = require("./controller/authController");
+const router = require("./postRotiBevarage/RotiBevarage");
 const nodeMailer = require("nodemailer");
 require("dotenv").config();
-const app = express();
 const cors = require("cors");
-const router = require("./postRotiBevarage/RotiBevarage");
-
+const app = express();
 
 app.use(cors());
 app.use(express.json());

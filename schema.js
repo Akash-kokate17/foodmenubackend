@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const vegSchema = new mongoose.Schema({
   no: Number,
   dishName: String,
-  price: Number,  
+  price: Number,
 });
 
 const Veg = mongoose.model("vegs", vegSchema);
@@ -21,8 +21,8 @@ const orderSchema = new mongoose.Schema({
   no: Number,
   items: [{ dishName: String, price: Number }], // Adjusted schema for items
   tableNo: Number,
-  tanduriRoti:Number,
-  waterBottle:Number,
+  tanduriRoti: String,
+  waterBottle: String,
 });
 
 const Order = mongoose.model("oders", orderSchema);
@@ -42,6 +42,5 @@ const registerSchema = mongoose.Schema({
 });
 
 const registers = new mongoose.model("registers", registerSchema);
-
 
 module.exports = { Veg, NonVeg, Order, logins, registers };
