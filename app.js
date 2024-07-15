@@ -150,7 +150,6 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     });
     // all ordered dishName
     const orderList = order.items
-      .slice(1)
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
 
