@@ -1,8 +1,14 @@
 const express = require("express");
 const { connectDatabase } = require("./databaseConnection");
-const { Veg, NonVeg, Order, placeOrders, AllDayOrder } = require("./schema");
+const {
+  Veg,
+  NonVeg,
+  Order,
+  placeOrders,
+  AllDayOrder,
+  rotiBottleCount,
+} = require("./schema");
 const authController = require("./controller/authController");
-const router = require("./postRotiBevarage/RotiBevarage");
 const nodeMailer = require("nodemailer");
 require("dotenv").config();
 const cors = require("cors");
@@ -11,7 +17,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api", authController);
-app.use("/rotiBevarage",router)
 
 // /veg for fetching all the veg data in mongodb
 app.get("/veg", async (req, res) => {
@@ -177,6 +182,46 @@ app.get("/getAllOderData", async (req, res) => {
   } catch (err) {
     console.log("something went wrong to fetch oders collection data", err);
     res.send("error to fetch oders data", { data: false });
+  }
+});
+
+// this /postRotiBottle for posting tableNumber, rotiCount,bottleCount
+app.post("/postRotiBottle", async (req, res) => {
+  let { tableNo, rotiCount, bottleCount } = req.body;
+  try {
+    let rotiBottleData = await rotiBottleCount.findOne({ tableNo });
+    if (rotiBottleData) {
+      rotiBottleData.roti.push({ rotiCount: rotiCount });
+      rotiBottleData.bottle.push({ bottleCount: bottleCount });
+
+      await rotiBottleData.save();
+      res.status(200).send(rotiBottleData);
+    } else {
+      const newData = new rotiBottleCount({
+        tableNo: tableNo,
+        roti: [{ rotiCount: rotiCount }],
+        bottle: [{ bottleCount: bottleCount }],
+      });
+      await newData.save();
+      res.status(400).send(newData);
+    }
+  } catch (error) {
+    console.log("something went wrong to push roti and bottle data", error);
+  }
+});
+
+// this rest api is for getting all the roti and bottle
+
+app.get("/getRotiBottleTableNo", async (req, res) => {
+  try {
+    let allData = await rotiBottleCount.find({});
+    if (allData) {
+      res.status(200).send(allData);
+    }else{
+      res.status(500).send("something went wrong to get data",{status:failed})
+    }
+  } catch (error) {
+    console.log("something went wrong to get roti bottle and tableNo");
   }
 });
 

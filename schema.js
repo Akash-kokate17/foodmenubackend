@@ -19,10 +19,8 @@ const NonVeg = mongoose.model("nonvegs", nonVegSchema);
 // this schema for deleting after new customer came.
 const orderSchema = new mongoose.Schema({
   no: Number,
-  items: [{ dishName: String, price: Number }], // Adjusted schema for items
+  items: [{ dishName: String, price: Number }],
   tableNo: Number,
-  tanduriRoti: String,
-  waterBottle: String,
 });
 
 const Order = mongoose.model("oders", orderSchema);
@@ -43,4 +41,12 @@ const registerSchema = mongoose.Schema({
 
 const registers = new mongoose.model("registers", registerSchema);
 
-module.exports = { Veg, NonVeg, Order, logins, registers };
+let bevarageSchema = mongoose.Schema({
+  tableNo: Number,
+  roti: [{ rotiCount: Number }],
+  bottle: [{ bottleCount: Number }],
+});
+
+let rotiBottleCount = mongoose.model("rotibottlecounts", bevarageSchema);
+
+module.exports = { Veg, NonVeg, Order, logins, registers, rotiBottleCount };
