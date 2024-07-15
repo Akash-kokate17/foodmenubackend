@@ -135,11 +135,11 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
     const { tableNo, userEmail } = req.params;
     const order = await Order.findOne({ tableNo: tableNo });
-    const totalRotiBottleCount = await rotiBottleCount({
-      tableNo: parseInt(tableNo),
-    });
-    if (!order || !totalRotiBottleCount) {
-      res.status(400).send("order is not found, order not placed");
+    // const totalRotiBottleCount = await rotiBottleCount({
+    //   tableNo: parseInt(tableNo),
+    // });
+    if (!order) {
+    return  res.status(400).send("order is not found, order not placed");
     }
     const transporter = nodeMailer.createTransport({
       service: "gmail",
@@ -154,20 +154,20 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
 
-    const roti = totalRotiBottleCount.reduce(
-      (acc, obj) =>
-        acc +
-        obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
-      0
-    );
+    // const roti = totalRotiBottleCount.reduce(
+    //   (acc, obj) =>
+    //     acc +
+    //     obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
+    //   0
+    // );
 
     // total count of ordered bottle
-    const bottle = totalRotiBottleCount.reduce(
-      (acc, obj) =>
-        acc +
-        obj.bottle.reduce((sum, rotiObj) => sum + (rotiObj.bottleCount || 0), 0),
-      0
-    );
+    // const bottle = totalRotiBottleCount.reduce(
+    //   (acc, obj) =>
+    //     acc +
+    //     obj.bottle.reduce((sum, rotiObj) => sum + (rotiObj.bottleCount || 0), 0),
+    //   0
+    // );
 
     const mailInfo = {
       from: "akashkokate1717@gmail.com",
@@ -179,8 +179,6 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       <ul>
       ${orderList}
       </ul>
-      <p>${roti}</p>
-      <p>${bottle}</p>
       </div>
       `,
     };
