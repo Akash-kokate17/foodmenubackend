@@ -135,7 +135,10 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
     const { tableNo, userEmail } = req.params;
     const order = await Order.findOne({ tableNo: tableNo });
-    if (!order) {
+    const totalRotiBottleCount = await rotiBottleCount({
+      tableNo: parseInt(tableNo),
+    });
+    if (!order || !totalRotiBottleCount) {
       res.status(400).send("order is not found, order not placed");
     }
     const transporter = nodeMailer.createTransport({
@@ -145,11 +148,26 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
         pass: "ugja dfbk oojq jrzz",
       },
     });
-
+    // all ordered dishName
     const orderList = order.items
       .slice(1)
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
+
+    const roti = totalRotiBottleCount.reduce(
+      (acc, obj) =>
+        acc +
+        obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
+      0
+    );
+
+    // total count of ordered bottle
+    const bottle = totalRotiBottleCount.reduce(
+      (acc, obj) =>
+        acc +
+        obj.bottle.reduce((sum, rotiObj) => sum + (rotiObj.bottleCount || 0), 0),
+      0
+    );
 
     const mailInfo = {
       from: "akashkokate1717@gmail.com",
@@ -161,6 +179,8 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       <ul>
       ${orderList}
       </ul>
+      <p>${roti}</p>
+      <p>${bottle}</p>
       </div>
       `,
     };
@@ -217,8 +237,10 @@ app.get("/getRotiBottleTableNo", async (req, res) => {
     let allData = await rotiBottleCount.find({});
     if (allData) {
       res.status(200).send(allData);
-    }else{
-      res.status(500).send("something went wrong to get data",{status:failed})
+    } else {
+      res
+        .status(500)
+        .send("something went wrong to get data", { status: failed });
     }
   } catch (error) {
     console.log("something went wrong to get roti bottle and tableNo");
