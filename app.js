@@ -1,13 +1,6 @@
 const express = require("express");
 const { connectDatabase } = require("./databaseConnection");
-const {
-  Veg,
-  NonVeg,
-  Order,
-  placeOrders,
-  AllDayOrder,
-  rotiBottleCount,
-} = require("./schema");
+const { Veg, NonVeg, Order, RotiBottleCount } = require("./schema");
 const authController = require("./controller/authController");
 const nodeMailer = require("nodemailer");
 require("dotenv").config();
@@ -134,59 +127,74 @@ app.get("/orderList/:tableNo", async (req, res) => {
 app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
     const { tableNo, userEmail } = req.params;
-    const order = await Order.findOne({ tableNo: tableNo });
-    // const totalRotiBottleCount = await rotiBottleCount({
-    //   tableNo: parseInt(tableNo),
-    // });
+    const order = await Order.findOne({ tableNo: parseInt(tableNo) });
+
+    const totalRotiBottleCount = await RotiBottleCount({
+      tableNo: parseInt(tableNo),
+    });
+    console.log("data", totalRotiBottleCount);
     if (!order) {
-    return  res.status(400).send("order is not found, order not placed");
+      return res.status(400).send("Order not found, order not placed");
     }
+
     const transporter = nodeMailer.createTransport({
       service: "gmail",
       auth: {
         user: "akashkokate1717@gmail.com",
-        pass: "ugja dfbk oojq jrzz",
+        pass: "ugja dfbk oojq jrzz", // Replace with your actual password or use environment variables for better security
       },
     });
-    // all ordered dishName
+
+    // Create list of ordered dishes
     const orderList = order.items
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
 
-    // const roti = totalRotiBottleCount.reduce(
-    //   (acc, obj) =>
-    //     acc +
-    //     obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
-    //   0
-    // );
+    // Calculate total roti count
+    const rotiCount = totalRotiBottleCount.reduce(
+      (acc, obj) =>
+        acc +
+        obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
+      0
+    );
 
-    // total count of ordered bottle
-    // const bottle = totalRotiBottleCount.reduce(
-    //   (acc, obj) =>
-    //     acc +
-    //     obj.bottle.reduce((sum, rotiObj) => sum + (rotiObj.bottleCount || 0), 0),
-    //   0
-    // );
+    // Calculate total bottle count
+    const bottleCount = totalRotiBottleCount.reduce(
+      (acc, obj) =>
+        acc +
+        obj.bottle.reduce(
+          (sum, bottleObj) => sum + (bottleObj.bottleCount || 0),
+          0
+        ),
+      0
+    );
+
+    // Create HTML list items for roti and bottle counts
+    const rotiListItem = `<p>Total Roti Count: ${rotiCount}</p>`;
+    const bottleListItem = `<p>Total Bottle Count: ${bottleCount}</p>`;
 
     const mailInfo = {
       from: "akashkokate1717@gmail.com",
       to: ["akashkokate1717@gmail.com", userEmail],
-      subject: "Your Oder List",
+      subject: "Your Order List",
       html: `
-      <h1 style="text-center">this is your oder menu</h1>
-      <div>
-      <ul>
-      ${orderList}
-      </ul>
-      </div>
+        <h1 style="text-align:center">This is your order menu</h1>
+        <div>
+          <ul>
+            ${orderList}
+          </ul>
+         </div>
+            ${rotiListItem}
+            ${bottleListItem}
       `,
     };
 
     await transporter.sendMail(mailInfo);
-    console.log("Email response:", mailInfo);
+    console.log("Email sent successfully:", mailInfo);
+    res.status(200).send("Email sent successfully");
   } catch (err) {
-    console.log("something went wrong to send mail", err);
-    res.status(400).send("something went wrong to send mail");
+    console.log("Something went wrong while sending the email", err);
+    res.status(400).send("Something went wrong while sending the email");
   }
 });
 
