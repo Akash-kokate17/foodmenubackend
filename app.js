@@ -129,7 +129,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     const { tableNo, userEmail } = req.params;
     const order = await Order.findOne({ tableNo: parseInt(tableNo) });
 
-    const totalRotiBottleCount = await RotiBottleCount({
+    const totalRotiBottleCount = await rotiBottleCount({
       tableNo: parseInt(tableNo),
     });
     console.log("data", totalRotiBottleCount);
