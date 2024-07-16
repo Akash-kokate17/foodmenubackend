@@ -128,11 +128,6 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
     const { tableNo, userEmail } = req.params;
     const order = await Order.findOne({ tableNo: parseInt(tableNo) });
-
-    const totalRotiBottleCount = await rotiBottleCount({
-      tableNo: parseInt(tableNo),
-    });
-    console.log("data", totalRotiBottleCount);
     if (!order) {
       return res.status(400).send("Order not found, order not placed");
     }
@@ -150,29 +145,6 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
 
-    // Calculate total roti count
-    const rotiCount = totalRotiBottleCount.reduce(
-      (acc, obj) =>
-        acc +
-        obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
-      0
-    );
-
-    // Calculate total bottle count
-    const bottleCount = totalRotiBottleCount.reduce(
-      (acc, obj) =>
-        acc +
-        obj.bottle.reduce(
-          (sum, bottleObj) => sum + (bottleObj.bottleCount || 0),
-          0
-        ),
-      0
-    );
-
-    // Create HTML list items for roti and bottle counts
-    const rotiListItem = ` <p>Total Roti Count: ${rotiCount}</p>`;
-    const bottleListItem = `<p>Total Bottle Count: ${bottleCount}</p>`;
-
     const mailInfo = {
       from: "akashkokate1717@gmail.com",
       to: ["akashkokate1717@gmail.com", userEmail],
@@ -184,8 +156,6 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
             ${orderList}
           </ul>
          </div>
-            ${rotiListItem}
-            ${bottleListItem}
       `,
     };
 
