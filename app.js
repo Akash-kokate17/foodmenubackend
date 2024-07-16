@@ -152,6 +152,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       html: ` 
         <h1 style="text-align:center">This is your order menu</h1>
         <div>
+        <p>hi</p>
           <ul>
             ${orderList}
           </ul>
