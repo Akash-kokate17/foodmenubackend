@@ -141,7 +141,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     });
 
     // Create list of ordered dishes
-    const orderList = order.items
+    const orderList = order.items.slice(1)
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
 
