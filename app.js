@@ -143,7 +143,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     );
 
     // Calculate total roti count
-    const bottle = rotiAndBottleData.roti.reduce(
+    const bottle = rotiAndBottleData.bottle.reduce(
       (acc, obj) => acc + (obj.bottleCount || 0),
       0
     );
