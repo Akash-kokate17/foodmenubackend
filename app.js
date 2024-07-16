@@ -128,6 +128,19 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
     const { tableNo, userEmail } = req.params;
     const order = await Order.findOne({ tableNo: parseInt(tableNo) });
+
+    const rotiAndBottleData = await rotiBottleCount.findOne({
+      tableNo: parseInt(tableNo),
+    });
+
+    const roti = rotiAndBottleData.reduce(
+      (acc, obj) =>
+        acc +
+        obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
+      0
+    );
+
+    let rotiCount = `<p>this is the count of roti ${roti}</p>`;
     if (!order) {
       return res.status(400).send("Order not found, order not placed");
     }
@@ -141,7 +154,8 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     });
 
     // Create list of ordered dishes
-    const orderList = order.items.slice(1)
+    const orderList = order.items
+      .slice(1)
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
 
@@ -152,7 +166,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       html: ` 
         <h1 style="text-align:center">This is your order menu</h1>
         <div>
-        <p>hi</p>
+        <p>hi ${rotiCount}</p>
           <ul>
             ${orderList}
           </ul>
