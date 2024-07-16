@@ -127,7 +127,7 @@ app.get("/orderList/:tableNo", async (req, res) => {
 app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
     const { tableNo, userEmail } = req.params;
-    
+
     // Fetch order details
     const order = await Order.findOne({ tableNo: parseInt(tableNo) });
 
@@ -139,6 +139,12 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     // Calculate total roti count
     const roti = rotiAndBottleData.roti.reduce(
       (acc, obj) => acc + (obj.rotiCount || 0),
+      0
+    );
+
+    // Calculate total roti count
+    const bottle = rotiAndBottleData.roti.reduce(
+      (acc, obj) => acc + (obj.bottleCount || 0),
       0
     );
 
@@ -169,10 +175,11 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       html: ` 
         <h1 style="text-align:center">This is your order menu</h1>
         <div>
-          <p>This is the count of roti: ${roti}</p>
           <ul>
             ${orderList}
           </ul>
+           <p style={color:black,font-weight:bold}>This is your all roti count: ${roti}</p>
+           <p style={color:black,font-weight:bold}>This is your all bottle count: ${bottle}</p>
         </div>
       `,
     };
@@ -186,7 +193,6 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     res.status(400).send("Something went wrong while sending the email");
   }
 });
-
 
 // /getAllOderData in oders collection.
 
