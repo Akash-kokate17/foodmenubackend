@@ -47,6 +47,6 @@ let bevarageSchema = mongoose.Schema({
   bottle: [{ bottleCount: Number }],
 });
 
-let RotiBottleCount = mongoose.model("rotibottlecounts", bevarageSchema);
+let rotiBottleCount = mongoose.model("rotibottlecounts", bevarageSchema);
 
-module.exports = { Veg, NonVeg, Order, logins, registers, RotiBottleCount };
+module.exports = { Veg, NonVeg, Order, logins, registers, rotiBottleCount };

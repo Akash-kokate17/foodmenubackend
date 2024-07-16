@@ -1,6 +1,6 @@
 const express = require("express");
 const { connectDatabase } = require("./databaseConnection");
-const { Veg, NonVeg, Order, RotiBottleCount } = require("./schema");
+const { Veg, NonVeg, Order, rotiBottleCount } = require("./schema");
 const authController = require("./controller/authController");
 const nodeMailer = require("nodemailer");
 require("dotenv").config();
@@ -170,14 +170,14 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     );
 
     // Create HTML list items for roti and bottle counts
-    const rotiListItem = `<p>Total Roti Count: ${rotiCount}</p>`;
+    const rotiListItem = ` <p>Total Roti Count: ${rotiCount}</p>`;
     const bottleListItem = `<p>Total Bottle Count: ${bottleCount}</p>`;
 
     const mailInfo = {
       from: "akashkokate1717@gmail.com",
       to: ["akashkokate1717@gmail.com", userEmail],
       subject: "Your Order List",
-      html: `
+      html: ` 
         <h1 style="text-align:center">This is your order menu</h1>
         <div>
           <ul>
