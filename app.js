@@ -127,24 +127,27 @@ app.get("/orderList/:tableNo", async (req, res) => {
 app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
   try {
     const { tableNo, userEmail } = req.params;
+    
+    // Fetch order details
     const order = await Order.findOne({ tableNo: parseInt(tableNo) });
 
+    // Fetch roti and bottle count details
     const rotiAndBottleData = await rotiBottleCount.findOne({
       tableNo: parseInt(tableNo),
     });
 
-    const roti = rotiAndBottleData.reduce(
-      (acc, obj) =>
-        acc +
-        obj.roti.reduce((sum, rotiObj) => sum + (rotiObj.rotiCount || 0), 0),
+    // Calculate total roti count
+    const roti = rotiAndBottleData.roti.reduce(
+      (acc, obj) => acc + (obj.rotiCount || 0),
       0
     );
 
-    let rotiCount = `<p>this is the count of roti ${roti}</p>`;
+    // Handle case where order is not found
     if (!order) {
       return res.status(400).send("Order not found, order not placed");
     }
 
+    // Create transporter for sending email
     const transporter = nodeMailer.createTransport({
       service: "gmail",
       auth: {
@@ -155,10 +158,10 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
 
     // Create list of ordered dishes
     const orderList = order.items
-      .slice(1)
       .map((item) => `<li>${item.dishName}</li>`)
       .join("");
 
+    // Compose email content
     const mailInfo = {
       from: "akashkokate1717@gmail.com",
       to: ["akashkokate1717@gmail.com", userEmail],
@@ -166,14 +169,15 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       html: ` 
         <h1 style="text-align:center">This is your order menu</h1>
         <div>
-        <p>hi ${rotiCount}</p>
+          <p>This is the count of roti: ${roti}</p>
           <ul>
             ${orderList}
           </ul>
-         </div>
+        </div>
       `,
     };
 
+    // Send email
     await transporter.sendMail(mailInfo);
     console.log("Email sent successfully:", mailInfo);
     res.status(200).send("Email sent successfully");
@@ -182,6 +186,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     res.status(400).send("Something went wrong while sending the email");
   }
 });
+
 
 // /getAllOderData in oders collection.
 
