@@ -174,12 +174,12 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
       subject: "Your Order List",
       html: ` 
         <h1 style="text-align:center">This is your order menu</h1>
-        <div>
+        <div style="text-align:center">
           <ul>
             ${orderList}
           </ul>
-           <p style={color:black,font-weight:bold}>This is your all roti count: ${roti}</p>
-           <p style={color:black,font-weight:bold}>This is your all bottle count: ${bottle}</p>
+           <p style="color:black,font-weight:bold ,text-align:center">This is your all roti count: ${roti}</p>
+           <p style="color:black,font-weight:bold">This is your all bottle count: ${bottle}</p>
         </div>
       `,
     };
