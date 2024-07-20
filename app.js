@@ -252,7 +252,8 @@ app.get("/getRotiBottleTableNo", async (req, res) => {
 
 app.get("/otpVerificationMail/:otp/:gmail",async(req,res)=>{
   try{
- let {otp,gmail} = req.body;
+ let {otp,gmail} = req.params;
+ otp = parseInt(otp)
   let transporter = nodeMailer.createTransport({
     service:"gmail",
     auth: {
@@ -267,7 +268,7 @@ app.get("/otpVerificationMail/:otp/:gmail",async(req,res)=>{
       subject:'Your Otp Verification Mail',
       html:`
         <h1>Welcome To Your XYX Restaurant.
-        <h5>This Is Your Otp For Email Verification ${parseInt(otp)}<h3>
+        <h5>This Is Your Otp For Email Verification ${otp}<h3>
       `
    }
   await transporter.sendMail(mailInfo)
