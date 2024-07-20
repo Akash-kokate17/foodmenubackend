@@ -267,7 +267,7 @@ app.get("/otpVerificationMail/:otp/:gmail",async(req,res)=>{
       subject:'Your Otp Verification Mail',
       html:`
         <h1>Welcome To Your XYX Restaurant.
-        <h5>This Is Your Otp For Email Verification ${otp}<h3>
+        <h5>This Is Your Otp For Email Verification ${parseInt(otp)}<h3>
       `
    }
   await transporter.sendMail(mailInfo)
