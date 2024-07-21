@@ -254,7 +254,6 @@ app.get("/otpVerificationMail/:otp/:gmail", async (req, res) => {
   try {
     let { otp, gmail } = req.params;
     otp = parseInt(otp);
-    console.log(`Received OTP: ${otp}, Gmail: ${gmail}`);  // Debug log
     let transporter = nodeMailer.createTransport({
       service: "gmail",
       auth: {
