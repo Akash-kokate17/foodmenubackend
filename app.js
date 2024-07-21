@@ -250,32 +250,33 @@ app.get("/getRotiBottleTableNo", async (req, res) => {
 
 // this route is for otp verification;
 
-app.get("/otpVerificationMail/:otp/:gmail",async(req,res)=>{
-  try{
- let {otp,gmail} = req.params;
- otp = parseInt(otp)
-  let transporter = nodeMailer.createTransport({
-    service:"gmail",
-    auth: {
-      user: "akashkokate1717@gmail.com",
-      pass: "ugja dfbk oojq jrzz", 
-    },
-  })
+app.get("/otpVerificationMail/:otp/:gmail", async (req, res) => {
+  try {
+    let { otp, gmail } = req.params;
+    otp = parseInt(otp);
+    console.log(`Received OTP: ${otp}, Gmail: ${gmail}`);  // Debug log
+    let transporter = nodeMailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "akashkokate1717@gmail.com",
+        pass: "ugja dfbk oojq jrzz",
+      },
+    });
 
-   let mailInfo = {
-    from:"akashkokate1717@gmail.com",
-      to:["akashkokate1717@gmail.com",gmail],
-      subject:'Your Otp Verification Mail',
-      html:`
+    let mailInfo = {
+      from: "akashkokate1717@gmail.com",
+      to: ["akashkokate1717@gmail.com", gmail],
+      subject: "Your Otp Verification Mail",
+      html: `
         <h1>Welcome To Your XYX Restaurant.
         <h5>This Is Your Otp For Email Verification ${otp}<h3>
-      `
-   }
-  await transporter.sendMail(mailInfo)
-  }catch(error){
-    console.log("get error to send otp mail",error)
+      `,
+    };
+    await transporter.sendMail(mailInfo);
+  } catch (error) {
+    console.log("get error to send otp mail", error);
   }
-})
+});
 
 const PORT = process.env.PORT || 3000;
 
