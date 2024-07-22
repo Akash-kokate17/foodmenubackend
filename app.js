@@ -279,20 +279,22 @@ app.get("/otpVerificationMail/:otp/:gmail", async (req, res) => {
 
 // this route is for delete the all roti and bottle
 
-app.delete("/deleteAllRotiBottle/tableNo",async(req,res)=>{
-  try{
-    let {tableNo} = req.params;
-    if(!tableNo){
-      res.status(500).send("tableNo is not found")
-    }else{
-    await rotiBottleCount.deleteOne({tableNo:tableNo});
-    res.status(200).send({msg:"roti and bottle data deleted",deleted:true})
+app.delete("/deleteAllRotiBottle/:tableNo", async (req, res) => {
+  try {
+    let { tableNo } = req.params;
+    if (!tableNo) {
+      return res.status(400).send("tableNo is not found");
+    } else {
+      await rotiBottleCount.deleteOne({ tableNo: tableNo });
+      res
+        .status(200)
+        .send({ msg: "roti and bottle data deleted", deleted: true });
     }
-  }catch(error){
-   console.log("getting error to delete table number roti and bottle")
-   res.status(400).send("getting error to delete roti and bottle order")
+  } catch (error) {
+    console.log("getting error to delete table number roti and bottle");
+    res.status(400).send("getting error to delete roti and bottle order");
   }
-})
+});
 
 const PORT = process.env.PORT || 3000;
 
