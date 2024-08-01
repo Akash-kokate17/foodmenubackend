@@ -14,7 +14,7 @@ app.use("/api", authController);
 // /veg for fetching all the veg data in mongodb
 app.get("/veg", async (req, res) => {
   try {
-    const vegData = await Veg.find({});
+    const vegData = await Veg.find({}).sort({no:1});
     res.send(vegData);
   } catch (err) {
     console.error("Error fetching veg data:", err);
@@ -25,7 +25,7 @@ app.get("/veg", async (req, res) => {
 // /nonVeg is for fetching all the nonVeg data from mongodb
 app.get("/nonVeg", async (req, res) => {
   try {
-    const nonVegData = await NonVeg.find({});
+    const nonVegData = await NonVeg.find({}).sort({no:1});
     res.send(nonVegData);
   } catch (err) {
     console.error("Error fetching non-veg data:", err);
