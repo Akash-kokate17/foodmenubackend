@@ -143,7 +143,7 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
 
   const bottle = rotiAndBottleData?.bottle
     ? rotiAndBottleData.bottle.reduce((acc, obj) => acc + (obj.bottleCount || 0), 0)
-    : 0;
+    : null;
 
     // Handle case where order is not found
     if (!order) {
