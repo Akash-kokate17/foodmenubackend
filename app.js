@@ -137,16 +137,13 @@ app.get("/sendMail/:tableNo/:userEmail", async (req, res) => {
     });
 
     // Calculate total roti count
-    const roti = rotiAndBottleData.roti.reduce(
-      (acc, obj) => acc + (obj.rotiCount || 0),
-      0
-    );
+    const roti = rotiAndBottleData?.roti
+    ? rotiAndBottleData.roti.reduce((acc, obj) => acc + (obj.rotiCount || 0), 0)
+    : 0;
 
-    // Calculate total roti count
-    const bottle = rotiAndBottleData.bottle.reduce(
-      (acc, obj) => acc + (obj.bottleCount || 0),
-      0
-    );
+  const bottle = rotiAndBottleData?.bottle
+    ? rotiAndBottleData.bottle.reduce((acc, obj) => acc + (obj.bottleCount || 0), 0)
+    : 0;
 
     // Handle case where order is not found
     if (!order) {
